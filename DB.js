@@ -16,17 +16,17 @@ connection.connect((error) => {
   });
   
   // Perform a query
-  connection.query('SELECT * FROM user', (error, results, fields) => {
-    if (error) throw error;
-    console.log('The users are: ', results);
-  });
-  connection.end((error) => {
-    if (error) {
-      console.error('Error closing the database connection: ' + error.stack);
-      return;
-    }
-    console.log('Connection closed.');
-  });
+//   connection.query('SELECT * FROM user', (error, results, fields) => {
+//     if (error) throw error;
+//     console.log('The users are: ', results);
+//   });
+//   connection.end((error) => {
+//     if (error) {
+//       console.error('Error closing the database connection: ' + error.stack);
+//       return;
+//     }
+//     console.log('Connection closed.');
+//   });
 
  
 
