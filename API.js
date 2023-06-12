@@ -1,16 +1,13 @@
 // import connection from './DB';
-const axios = require('axios');
 const connection = require('./DB')
+const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const api = axios.create({
-  baseURL: 'https://localhost:3000'
-})
 
 const app = express();
 app.use(bodyParser.json());
-
+app.use(cors());
 app.get('/user',(req, res)=>{
     connection.query('SELECT * FROM user', (error, results, fields) => {
         if (error) throw error;
@@ -20,13 +17,45 @@ app.get('/user',(req, res)=>{
     
 })
 
-app.post('/register', (req, res) => {
-  const {username, name, password } =  req.body;
+app.post('/login',(req,res)=>{
+  try {
+    const {username,password} = req.body;
+    console.log(req.body);
+    connection.query(`SELECT * FROM user WHERE username = '${username}' AND password = '${password}'`, (err, result) => {
+      if (err) {
+        res.send(false);
+      } else {
+        res.send(result[0]);
+        console.log(result)
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+})
 
-  api.post('/register', {username, name, password})
-  .then(response => {
-    res.json(response.data);
-    connection.query(`INSERT INTO user(User_Id, User_password, Name) VALUES ('${username}', '${password}', '${name}')`, (err, result) => {
+app.post('/toDoList',(req,res)=>{
+  try {
+    const {username} = req.body;
+    console.log(req.body);
+    connection.query(`SELECT * FROM todo NATURAL JOIN user WHERE username = '${username}'`, (err, result) => {
+      if (err) {
+        res.send(false);
+      } else {
+        res.send(result);
+        console.log(result)
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.post('/register', (req, res) => {
+  try {
+    const { username,password,name } = req.body;
+    console.log(req.body);
+    connection.query(`INSERT INTO user(username,password, name) VALUES ('${username}', '${password}', '${name}')`, (err, result) => {
       if (err) {
         console.log(err);
         res.send('ERROR OCCURRED WHILE REGISTERING !!');
@@ -34,10 +63,9 @@ app.post('/register', (req, res) => {
         res.send('REGISTERED SUCCESSFUL !!');
       }
     });
-  })
-  .catch(error => {
-    res.status(500).json({ error: 'Internal server error' });
-  });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.listen(6951, () => {
