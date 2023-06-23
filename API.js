@@ -48,6 +48,30 @@ app.post('/toDoList',(req,res)=>{
     });
   } catch (error) {
     console.log(error);
+    process.on('uncaughtException', function (err) {
+      console.log(err);
+  }); 
+  }
+})
+
+app.post('/addToDoList',(req,res)=>{
+  try {
+    const {date_time,message,priority,username} = req.body;
+    console.log(req.body);
+    connection.query(`INSERT INTO todo(date_time, message, priority, username) VALUES ('${date_time}','${message}','Low','${username}')`, (err, result) => {
+      if (err) {
+        res.send(false);
+        console.log(err);
+      } else {
+        res.send(true);
+        console.log("the message already added !!")
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    process.on('uncaughtException', function (err) {
+      console.log(err);
+  }); 
   }
 })
 
